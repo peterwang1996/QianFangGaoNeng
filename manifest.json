@@ -1,0 +1,21 @@
+{
+    "name": "前方高能",
+    "version": "0.1",
+    "description": "A small tool for visualizing the density of damuku from videos in Bilibili",
+    "manifest_version": 2,
+    "icons": {
+        "128": "icon_128.png"
+    },
+    // "background_page": "bg.html",
+    "permissions": ["http://*.bilibili.com/", "https://*.bilibili.com/"],
+    "browser_action": {
+        "default_title": "",
+        "default_icon": "icon_19.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [{
+        "matches": ["http://www.bilibili.com/video/av*", "http://bangumi.bilibili.com/anime/v/*"],
+        // "css": ["mystyles.css"],
+        "js": ["./third-party/js/echarts.custom.js", "./third-party/js/zepto.min.js", "./js/mainFunc.js"]
+    }]
+}
