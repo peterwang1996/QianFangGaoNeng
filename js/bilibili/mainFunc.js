@@ -24,7 +24,7 @@ function getCid() {
 /**
  * 获得弹幕数据
  * @param {String} cid 视频的 cid
- * @returns {Object} 弹幕的 XML 树
+ * @returns {Object} 弹幕的 XML 文档
  */
 function getDanmukuData(cid) {
     var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
@@ -39,7 +39,7 @@ function getDanmukuData(cid) {
 
 /**
  * 解析弹幕数据
- * @param {Object} danmukuData 弹幕的 XML 树
+ * @param {Object} danmukuData 弹幕的 XML 文档
  * @returns {Array} 弹幕时间数据，每个元素是弹幕发送的时间
  */
 function parseDanmukuData(danmukuData) {
@@ -68,7 +68,7 @@ function drawChart(danmukuData) {
     chartOption.series.data = danmukuData.partDanmukuRho;
     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
     myChart.setOption(chartOption);
-    
+
     return myChart;
 }
 
@@ -83,7 +83,7 @@ function addPlayerHook(myChart, player, step) {
         console.warn('Waring: Old player is not supported.');
     } else {
         chartOption.series.markLine.data.push(chartTimeline);
-
+        var lastTime = 0;
         myChart.on('click', function(params) {
             var timeStamp = null;
             if (params.componentType === "markPoint") {
@@ -107,10 +107,13 @@ function addPlayerHook(myChart, player, step) {
                 }
                 return;
             }
-            chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
-            chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
-            myChart.setOption(chartOption);
-        }, 500);
+            if (nowTime !== lastTime) {
+                chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
+                chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
+                myChart.setOption(chartOption);
+                lastTime = nowTime;
+            }
+        }, 100);
     }
 }
 
