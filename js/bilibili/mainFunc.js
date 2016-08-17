@@ -1,24 +1,36 @@
 /**
  * 获得视频 cid 以及播放器接口
+ * @param {String} cid 视频的 cid
  * @returns {Function} 播放器对象
  */
-function getPlayer() {
+function getPlayer(cid) {
     var player = null;
     if ($('#player_placeholder > param[name=flashvars]').val()) {
         console.log('new');
         player = $('#player_placeholder')[0];
     } else {
         console.log('old');
+        player = (function(cid) {
+            var port = chrome.runtime.connect({
+                name: cid + '_danmuku'
+            });
+
+            port.onMessage.addListener(function(msg) {
+                console.log(msg);
+            });
+
+            return {
+                jwSeek: function(param) {
+                    console.log(port);
+                    port.postMessage({
+                        command: 'jwSeek',
+                        param: param
+                    });
+                }
+            }
+        })(cid);
     }
     return player;
-}
-
-/**
- * 获得视频 cid
- * @returns {String} 视频的 cid
- */
-function getCid() {
-    return $('.player-wrapper').html().match(/cid=\d*/)[0].slice(4);
 }
 
 /**
@@ -119,8 +131,8 @@ function addPlayerHook(myChart, player, step) {
 
 // START
 if (isOpen) {
-    var cid = getCid();
-    var player = getPlayer();
+    var cid = $('.player-wrapper').html().match(/cid=\d*/)[0].slice(4);
+    var player = getPlayer(cid);
     var danmukuData = getDanmukuData(cid);
     var danmukuTime = parseDanmukuData(danmukuData);
     var chartData = makeChartData(danmukuTime);
