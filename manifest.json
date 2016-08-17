@@ -16,6 +16,12 @@
     "content_scripts": [{
         "matches": ["http://www.bilibili.com/video/av*", "http://bangumi.bilibili.com/anime/v/*"],
         // "css": ["mystyles.css"],
-        "js": ["./third-party/js/echarts.custom.js", "./third-party/js/zepto.min.js", "./js/mainFunc.js"]
+        "js": [
+            "./third-party/js/echarts.custom.js",
+            "./third-party/js/zepto.min.js",
+            "./js/common/commonFunc.js",
+            "./js/bilibili/constVar.js",
+            "./js/bilibili/mainFunc.js"
+        ]
     }]
 }
