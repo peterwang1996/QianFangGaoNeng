@@ -32,7 +32,7 @@ function makeChartData(danmukuTime) {
     var step = maxLength > danmukuPart ? Math.floor(maxLength / danmukuPart) : 1;
     console.log(step);
 
-    for (var i = 0; i < maxLength; i += step) {
+    for (var i = 0; i <= maxLength; i += step) {
         partDanmukuTime.push(timeNumToStr(i));
         partDanmukuRho.push(0);
     }
