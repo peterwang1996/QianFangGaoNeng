@@ -14,9 +14,13 @@ function getPlayer(cid) {
             var port = chrome.runtime.connect({
                 name: cid + '_danmuku'
             });
+            console.log(port);
 
-            port.onMessage.addListener(function(msg) {
-                console.log(msg);
+            chrome.runtime.onConnect.addListener(function(port) {
+                console.log(port.name + '- iframe');
+                port.onMessage.addListener(function(msg) {
+                    console.log(msg);
+                });
             });
 
             return {
