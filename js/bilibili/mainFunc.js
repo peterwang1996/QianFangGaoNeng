@@ -42,7 +42,7 @@ function getPlayer(cid) {
  * @param {String} cid 视频的 cid
  * @returns {Object} 弹幕的 XML 文档
  */
-function getDanmukuData(cid) {
+function getDanmukuXml(cid) {
     var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
     return $.ajax({
         url: danmukuAddress,
@@ -55,12 +55,12 @@ function getDanmukuData(cid) {
 
 /**
  * 解析弹幕数据
- * @param {Object} danmukuData 弹幕的 XML 文档
+ * @param {Object} danmukuXml 弹幕的 XML 文档
  * @returns {Array} 弹幕时间数据，每个元素是弹幕发送的时间
  */
-function parseDanmukuData(danmukuData) {
+function parseDanmukuData(danmukuXml) {
     var danmukuTime = [];
-    $(danmukuData).find('d').each(function() {
+    $(danmukuXml).find('d').each(function() {
         var param = $(this).attr('p').split(',').map(function(str) {
             return parseInt(str);
         });
@@ -69,23 +69,6 @@ function parseDanmukuData(danmukuData) {
         }
     });
     return danmukuTime;
-}
-
-/**
- * 绘制并返回 eCharts 图表
- * @param {Object} danmukuData 处理过的弹幕数据
- * @returns {Object} 绘制好的 eCharts 对象
- */
-function drawChart(danmukuData) {
-    $('.scontent').css('margin-bottom', '0');
-    $('.scontent').after(domChartInner);
-    var myChart = echarts.init(document.getElementById(domChartId));
-    chartOption.xAxis.data = danmukuData.partDanmukuTime;
-    chartOption.series.data = danmukuData.partDanmukuRho;
-    chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
-    myChart.setOption(chartOption);
-
-    return myChart;
 }
 
 /**
@@ -137,8 +120,8 @@ function addPlayerHook(myChart, player, step) {
 if (isOpen) {
     var cid = $('.player-wrapper').html().match(/cid=\d*/)[0].slice(4);
     var player = getPlayer(cid);
-    var danmukuData = getDanmukuData(cid);
-    var danmukuTime = parseDanmukuData(danmukuData);
+    var danmukuXml = getDanmukuXml(cid);
+    var danmukuTime = parseDanmukuData(danmukuXml);
     var chartData = makeChartData(danmukuTime);
     var myChart = drawChart(chartData);
     addPlayerHook(myChart, player, chartData.step);

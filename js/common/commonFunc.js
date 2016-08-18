@@ -55,3 +55,21 @@ function makeChartData(danmukuTime) {
         step: step
     };
 }
+
+
+/**
+ * 绘制并返回 eCharts 图表
+ * @param {Object} danmukuData 处理过的弹幕数据
+ * @returns {Object} 绘制好的 eCharts 对象
+ */
+function drawChart(danmukuData) {
+    $('.scontent').css('margin-bottom', '0');
+    $('.scontent').after(domChartInner);
+    var myChart = echarts.init(document.getElementById(domChartId));
+    chartOption.xAxis.data = danmukuData.partDanmukuTime;
+    chartOption.series.data = danmukuData.partDanmukuRho;
+    chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
+    myChart.setOption(chartOption);
+
+    return myChart;
+}
