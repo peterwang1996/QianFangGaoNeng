@@ -4,15 +4,15 @@
 
 这是本 UP 主，哦不，本宝宝闲得蛋疼，写的一个黑科技小插件，用于 Chrome 浏览器（理论上 Webkit 内核的国产浏览器应该也可以用，但我还没测试过），作用就是在 Bilibili 的视频下面显示这么样一个图表：
 
-![图1](./README-src/1.png)
+![图1](https://ws3.sinaimg.cn/large/4b945ffegw1f6y91obbwtj20s00km43x.jpg)
 
 如你所见，这个图表显示了当前视频在不同时间点的弹幕密度，它甚至还配有一个时间轴，可以随着视频的播放和跳转同步更新：
 
-![图2](./README-src/2.gif)
+![图2](https://ws3.sinaimg.cn/large/4b945ffegw1f6y927gj5ig20em0fjx6s.gif)
 
 甚至你在图表标线上面点击的时候，视频也会跳转到与之对应的时间点（准确地说是比选定的时间点提前一段时间，目前是5秒）：
 
-![图3](./README-src/3.gif)
+![图3](https://ws4.sinaimg.cn/large/4b945ffegw1f6y92d0jpng20em0fj4qz.gif)
 
 // *μ*'s 的小姐姐们我爱你们啊！
 
