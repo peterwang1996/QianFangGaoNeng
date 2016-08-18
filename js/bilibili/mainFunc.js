@@ -1,44 +1,36 @@
 /**
  * 获得视频 cid 以及播放器接口
- * @param {String} cid 视频的 cid
- * @returns {Function} 播放器对象
+ * @returns {Object} $player: 播放器 jQuery 对象， player: 播放器对象， cid: 视频 cid
  */
-function getPlayer(cid) {
+function initInfo() {
+    var $player = null;
     var player = null;
-    if ($('#player_placeholder > param[name=flashvars]').val()) {
-        console.log('new');
-        player = $('#player_placeholder')[0];
+    var cid = null;
+    if ($('#player_placeholder').length > 0) {
+        $player = $('#player_placeholder');
+        console.log($player);
+        player = $player[0];
+        cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
+    } else if ($('#bofqi_embed')) {
+        $player = $('#bofqi_embed');
+        $player.css('height', '556px')
+        player = $player[0];
+        cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else {
-        console.log('old');
-        player = (function(cid) {
-            var port = chrome.runtime.connect({
-                name: cid + '_danmuku'
-            });
-            console.log(port);
-
-            chrome.runtime.onConnect.addListener(function(port) {
-                console.log(port.name + '- iframe');
-                port.onMessage.addListener(function(msg) {
-                    console.log(msg);
-                });
-            });
-
-            return {
-                jwSeek: function(param) {
-                    console.log(port);
-                    port.postMessage({
-                        command: 'jwSeek',
-                        param: param
-                    });
-                }
-            }
-        })(cid);
+        console.warn('Unsupported player');
     }
-    return player;
+
+    console.log(player);
+    console.log(cid);
+    return {
+        $player: $player,
+        player: player,
+        cid: cid
+    };
 }
 
 /**
- * 获得弹幕数据
+ * 获得弹幕 XML 树
  * @param {String} cid 视频的 cid
  * @returns {Object} 弹幕的 XML 文档
  */
@@ -56,7 +48,7 @@ function getDanmukuXml(cid) {
 /**
  * 解析弹幕数据
  * @param {Object} danmukuXml 弹幕的 XML 文档
- * @returns {Array} 弹幕时间数据，每个元素是弹幕发送的时间
+ * @returns {Array} 弹幕数据， time: 整数发送时间， content: 弹幕内容
  */
 function parseDanmukuData(danmukuXml) {
     var danmukuData = [];
@@ -71,6 +63,7 @@ function parseDanmukuData(danmukuXml) {
             });
         }
     });
+    console.log(danmukuData);
     return danmukuData;
 }
 
@@ -121,12 +114,20 @@ function addPlayerHook(myChart, player, step) {
 
 // START
 if (isOpen) {
-    var cid = $('.player-wrapper').html().match(/cid=\d*/)[0].slice(4);
-    var player = getPlayer(cid);
-    var danmukuXml = getDanmukuXml(cid);
-    var danmukuData = parseDanmukuData(danmukuXml);
-    var chartData = makeChartData(danmukuData);
-    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
-    var myChart = drawChart(chartData);
-    addPlayerHook(myChart, player, chartData.step);
+    if ($('iframe').length > 0) {
+        var $iframe = $('iframe')
+        var oriHeight = parseInt($iframe.attr('height'));
+        var tarHeight = oriHeight + chartHeight + (chartMargin * 2);
+        $iframe.attr('height', tarHeight);
+        $iframe.css('height', tarHeight + 'px');
+    } else {
+        var myInitInfo = initInfo();
+        // var cid = $('.player-wrappers').html().match(/cid=\d*/)[0].slice(4);
+        var danmukuXml = getDanmukuXml(myInitInfo.cid);
+        var danmukuData = parseDanmukuData(danmukuXml);
+        var chartData = makeChartData(danmukuData);  
+        var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
+        var myChart = drawChart(myInitInfo.$player, chartData);
+        addPlayerHook(myChart, myInitInfo.player, chartData.step);
+    }
 }

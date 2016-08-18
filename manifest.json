@@ -7,7 +7,7 @@
         "128": "icon_128.png"
     },
     // "background_page": "bg.html",
-    "permissions": ["http://*.bilibili.com/", "https://*.bilibili.com/", "tabs"],
+    "permissions": ["*://*.bilibili.com/*"],
     "browser_action": {
         "default_title": "",
         "default_icon": "icon_19.png",
@@ -15,7 +15,12 @@
     },
 
     "content_scripts": [{
-        "matches": ["http://www.bilibili.com/video/av*", "http://bangumi.bilibili.com/anime/v/*"],
+        "all_frames": true,
+        "matches": [
+            "http://www.bilibili.com/video/av*",
+            "http://bangumi.bilibili.com/anime/v/*",
+            "https://secure.bilibili.com/*"
+        ],
         // "css": ["mystyles.css"],
         "js": [
             "./third-party/js/echarts.custom.js",
@@ -24,12 +29,6 @@
             "./js/common/commonFunc.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/mainFunc.js"
-        ]
-    }, {
-        "matches": ["https://secure.bilibili.com/*"],
-        "all_frames": true,
-        "js": [
-            "./js/bilibili/officialIframePlayer.js"
         ]
     }]
 }
