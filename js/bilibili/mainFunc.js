@@ -59,16 +59,19 @@ function getDanmukuXml(cid) {
  * @returns {Array} 弹幕时间数据，每个元素是弹幕发送的时间
  */
 function parseDanmukuData(danmukuXml) {
-    var danmukuTime = [];
+    var danmukuData = [];
     $(danmukuXml).find('d').each(function() {
         var param = $(this).attr('p').split(',').map(function(str) {
             return parseInt(str);
         });
         if (param[5] === 0) {
-            danmukuTime.push(parseInt(param[0]));
+            danmukuData.push({
+                time: parseInt(param[0]),
+                content: $(this).html()
+            });
         }
     });
-    return danmukuTime;
+    return danmukuData;
 }
 
 /**
@@ -121,8 +124,9 @@ if (isOpen) {
     var cid = $('.player-wrapper').html().match(/cid=\d*/)[0].slice(4);
     var player = getPlayer(cid);
     var danmukuXml = getDanmukuXml(cid);
-    var danmukuTime = parseDanmukuData(danmukuXml);
-    var chartData = makeChartData(danmukuTime);
+    var danmukuData = parseDanmukuData(danmukuXml);
+    var chartData = makeChartData(danmukuData);
+    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
     var myChart = drawChart(chartData);
     addPlayerHook(myChart, player, chartData.step);
 }
