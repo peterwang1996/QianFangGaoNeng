@@ -6,7 +6,6 @@
 
 ![1](https://cloud.githubusercontent.com/assets/12966803/17796539/c10b5362-65f3-11e6-8f76-2d819aa67ec1.png)
 
-
 如你所见，这个图表显示了当前视频在不同时间点的弹幕密度，它甚至还配有一个时间轴，可以随着视频的播放和跳转同步更新：
 
 ![2](https://cloud.githubusercontent.com/assets/12966803/17796541/c52921fe-65f3-11e6-8b70-0f436d98905d.gif)
@@ -22,18 +21,21 @@
 ## 现在已经实现的功能
 
 - 在 Bilibili 的所有视频下方显示弹幕密度图表
-- 在新版（即没有 `<iframe>` 包裹的）官方播放器上实现时间轴和自动空降功能
+- 在 Bilibili 的所有官方播放器实现时间轴和自动空降功能
 
 ## 计划中的功能
 
 - 弄个像样的 Icon
-- 对 Bilibili 的老版播放器和第三方播放器（如优酷腾讯爱奇艺的嵌入播放器）添加时间轴和自动空降的支持
+- 对 Bilibili 的第三方播放器（如优酷腾讯爱奇艺的嵌入播放器）添加时间轴和自动空降的支持
 - 增加对 AcFun 的支持
+- 增加智能侦测空降点的功能
 - 上线 Chrome Web Store
 
-## 使用协议
+## 使用协议 && 版权声明
 
 本项目适用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 协议。
+
+Copyright © 2016 Peter Wang, All Rights Reserved
 
 ## 致谢
 
@@ -44,3 +46,5 @@
 ## 更新日志
 
 [V0.1 @ 2016-08-18] 基本功能完成，上线 GitHub
+
+[V0.2 @ 2016-08-18] 完成 Bilibili iframe 播放器的适配

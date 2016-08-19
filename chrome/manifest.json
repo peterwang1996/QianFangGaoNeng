@@ -1,6 +1,6 @@
 {
     "name": "前方高能",
-    "version": "0.1",
+    "version": "0.2",
     "description": "A small tool for visualizing the density of damuku from videos in Bilibili",
     "manifest_version": 2,
     "icons": {
