@@ -32,17 +32,36 @@ function initInfo() {
 /**
  * 获得弹幕 XML 树
  * @param {String} cid 视频的 cid
- * @returns {Object} 弹幕的 XML 文档
+ * @param {then} 接下来要执行的函数
  */
-function getDanmukuXml(cid) {
+function getDanmukuXml(cid, then) {
     var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
-    return $.ajax({
-        url: danmukuAddress,
-        processData: false,
-        cache: false,
-        async: false,
-        dataType: 'xml'
-    }).responseXML;
+    var danmukuXml = null;
+    try {
+        danmukuXml = $.ajax({
+            url: danmukuAddress,
+            processData: false,
+            cache: false,
+            async: false,
+            dataType: 'xml'
+        }).responseXML;
+        return then.apply(this, danmukuXml);
+    } catch (e) {
+        if ((e + '').indexOf('Failed to execute \'send\' on \'XMLHttpRequest\'') !== -1) {
+            console.log('xsite');
+            chrome.runtime.sendMessage({
+                action: 'requireDanmuku',
+                type: 'xml',
+                src: danmukuAddress
+            }, function(response) {
+                console.log(response);
+                danmukuXml = response.danmukuXml;
+                return then.apply(this, danmukuXml);
+            });
+        } else {
+            console.error(e);
+        }
+    }
 }
 
 /**
@@ -51,6 +70,7 @@ function getDanmukuXml(cid) {
  * @returns {Array} 弹幕数据， time: 整数发送时间， content: 弹幕内容
  */
 function parseDanmukuData(danmukuXml) {
+    console.log(danmukuXml);
     var danmukuData = [];
     $(danmukuXml).find('d').each(function() {
         var param = $(this).attr('p').split(',').map(function(str) {
@@ -97,10 +117,11 @@ function addPlayerHook(myChart, player, step) {
             try {
                 var nowTime = Math.floor(player.jwGetPosition());
             } catch (e) {
-                if ((e + '') !== 'TypeError: player.jwGetPosition is not a function') {
+                if ((e + '') === 'TypeError: player.jwGetPosition is not a function') {
+                    return;
+                } else {
                     console.error(e);
                 }
-                return;
             }
             if (nowTime !== lastTime) {
                 chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
@@ -117,15 +138,16 @@ if (isOpen) {
     if ($('iframe').length > 0) {
         var $iframe = $('iframe')
         var oriHeight = parseInt($iframe.attr('height'));
-        var tarHeight = oriHeight + chartHeight + (chartMargin * 2);
+        var tarHeight = oriHeight + (chartHeight + chartMargin) * 2;
         $iframe.attr('height', tarHeight);
         $iframe.css('height', tarHeight + 'px');
     } else {
         var myInitInfo = initInfo();
         // var cid = $('.player-wrappers').html().match(/cid=\d*/)[0].slice(4);
-        var danmukuXml = getDanmukuXml(myInitInfo.cid);
-        var danmukuData = parseDanmukuData(danmukuXml);
-        var chartData = makeChartData(danmukuData);  
+        // var danmukuXml = getDanmukuXml(myInitInfo.cid);
+        // var danmukuData = parseDanmukuData(danmukuXml);
+        var danmukuData = getDanmukuXml(myInitInfo.cid, parseDanmukuData);
+        var chartData = makeChartData(danmukuData);
         var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
         var myChart = drawChart(myInitInfo.$player, chartData);
         addPlayerHook(myChart, myInitInfo.player, chartData.step);

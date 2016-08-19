@@ -6,7 +6,12 @@
     "icons": {
         "128": "icon_128.png"
     },
-    // "background_page": "bg.html",
+    "background": {
+        "scripts": [
+            "./third-party/js/zepto.min.js",
+            "./js/bg/xOrigin.js"
+        ]
+    },
     "permissions": ["*://*.bilibili.com/*"],
     "browser_action": {
         "default_title": "",
