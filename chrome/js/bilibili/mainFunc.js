@@ -109,6 +109,10 @@ function addPlayerHook(myChart, player, step) {
     }
 }
 
+/**
+ * 在获取到弹幕 XML 之后需要做的所有事情
+ * @param {Object} danmukuXml 弹幕 XML 对象
+ */
 function afterGettingXml(danmukuXml) {
     var danmukuData = parseDanmukuData(danmukuXml);
     var chartData = makeChartData(danmukuData);
