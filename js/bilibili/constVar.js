@@ -1,7 +1,8 @@
 var isOpen = true;
 var domChartId = 'danmuku-chart';
 var chartHeight = 160;
-var chartMargin = 10
+var chartMargin = 10;
+var chartSumHeight = chartHeight + chartMargin;
 var domChartInner = '<div id="' + domChartId + '-container" style="height: ' + chartHeight + 'px; width: 980px; margin: ' + chartMargin + 'px auto; background: #fff; border: 1px solid #e5e9ef; border-radius: 4px;"><div id="' + domChartId + '" style="height: ' + chartHeight + 'px"></div></div>';
 var danmukuPart = 60;
 var timeInAdvance = 5;

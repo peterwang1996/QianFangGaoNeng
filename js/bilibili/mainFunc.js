@@ -13,7 +13,18 @@ function initInfo() {
         cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else if ($('#bofqi_embed')) {
         $player = $('#bofqi_embed');
-        $player.css('height', '556px')
+        $player.css('height', 'calc(100% - ' + chartSumHeight + 'px)');
+        $player.before('<style>\n' +
+            '@media screen and (max-width: 320px) {\n' +
+            '   #' + domChartId + '-container {\n' +
+            '       display: none;\n' +
+            '   }\n' +
+            '   #bofqi_embed {\n' +
+            '       height: 100% !important;\n' +
+            '   }\n' +
+            '}\n' +
+            '</style>\n'
+        );
         player = $player[0];
         cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else {
@@ -27,41 +38,6 @@ function initInfo() {
         player: player,
         cid: cid
     };
-}
-
-/**
- * 获得弹幕 XML 树
- * @param {String} cid 视频的 cid
- * @param {then} 接下来要执行的函数
- */
-function getDanmukuXml(cid, then) {
-    var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
-    var danmukuXml = null;
-    try {
-        danmukuXml = $.ajax({
-            url: danmukuAddress,
-            processData: false,
-            cache: false,
-            async: false,
-            dataType: 'xml'
-        }).responseXML;
-        return then.apply(this, danmukuXml);
-    } catch (e) {
-        if ((e + '').indexOf('Failed to execute \'send\' on \'XMLHttpRequest\'') !== -1) {
-            console.log('xsite');
-            chrome.runtime.sendMessage({
-                action: 'requireDanmuku',
-                type: 'xml',
-                src: danmukuAddress
-            }, function(response) {
-                console.log(response);
-                danmukuXml = response.danmukuXml;
-                return then.apply(this, danmukuXml);
-            });
-        } else {
-            console.error(e);
-        }
-    }
 }
 
 /**
@@ -118,7 +94,7 @@ function addPlayerHook(myChart, player, step) {
                 var nowTime = Math.floor(player.jwGetPosition());
             } catch (e) {
                 if ((e + '') === 'TypeError: player.jwGetPosition is not a function') {
-                    return;
+                    console.log('Player not ready yet');
                 } else {
                     console.error(e);
                 }
@@ -133,23 +109,50 @@ function addPlayerHook(myChart, player, step) {
     }
 }
 
+function afterGettingXml(danmukuXml) {
+    var danmukuData = parseDanmukuData(danmukuXml);
+    var chartData = makeChartData(danmukuData);
+    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
+    var myChart = drawChart(myInitInfo.$player, chartData);
+    addPlayerHook(myChart, myInitInfo.player, chartData.step);
+}
+
 // START
 if (isOpen) {
     if ($('iframe').length > 0) {
         var $iframe = $('iframe')
         var oriHeight = parseInt($iframe.attr('height'));
-        var tarHeight = oriHeight + (chartHeight + chartMargin) * 2;
+        var tarHeight = 556 + chartHeight + (chartMargin);
         $iframe.attr('height', tarHeight);
         $iframe.css('height', tarHeight + 'px');
     } else {
         var myInitInfo = initInfo();
-        // var cid = $('.player-wrappers').html().match(/cid=\d*/)[0].slice(4);
-        // var danmukuXml = getDanmukuXml(myInitInfo.cid);
-        // var danmukuData = parseDanmukuData(danmukuXml);
-        var danmukuData = getDanmukuXml(myInitInfo.cid, parseDanmukuData);
-        var chartData = makeChartData(danmukuData);
-        var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
-        var myChart = drawChart(myInitInfo.$player, chartData);
-        addPlayerHook(myChart, myInitInfo.player, chartData.step);
+        var danmukuAddress = 'http://comment.bilibili.com/' + myInitInfo.cid + '.xml';
+        var danmukuXml = null;
+
+        // 获取弹幕 XML 数据。由于是异步过程，就单独拿出来了
+        try {
+            danmukuXml = $.ajax({
+                url: danmukuAddress,
+                processData: false,
+                cache: false,
+                async: false,
+            }).responseXML;
+            afterGettingXml(danmukuXml);
+        } catch (e) {
+            if ((e + '').indexOf('Failed to execute \'send\' on \'XMLHttpRequest\'') !== -1) {
+                console.log('xsite');
+                chrome.runtime.sendMessage({
+                    action: 'requireDanmuku',
+                    type: 'xml',
+                    src: danmukuAddress
+                }, function(response) {
+                    console.log(response);
+                    afterGettingXml(new DOMParser().parseFromString(response.danmukuXmlText, "text/xml"));
+                });
+            } else {
+                console.error(e);
+            }
+        }
     }
 }
