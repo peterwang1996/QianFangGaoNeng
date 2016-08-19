@@ -35,5 +35,8 @@
             "./js/bilibili/constVar.js",
             "./js/bilibili/mainFunc.js"
         ]
-    }]
+    }],
+    "background": {
+        "scripts": ["background.js"]
+    }
 }
