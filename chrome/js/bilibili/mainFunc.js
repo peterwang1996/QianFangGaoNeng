@@ -13,15 +13,17 @@ function initInfo() {
         cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else if ($('#bofqi_embed')) {
         $player = $('#bofqi_embed');
-        $player.css('height', 'calc(100% - ' + chartSumHeight + 'px)');
         $player.before('<style>\n' +
+            '#bofqi_embed {\n' +
+            '    height: calc(100% - ' + chartSumHeight + 'px)\n' +
+            '}\n' +
             '@media screen and (max-width: 320px) {\n' +
-            '   #' + domChartId + '-container {\n' +
-            '       display: none;\n' +
-            '   }\n' +
-            '   #bofqi_embed {\n' +
-            '       height: 100% !important;\n' +
-            '   }\n' +
+            '    #' + domChartId + '-container {\n' +
+            '        display: none;\n' +
+            '    }\n' +
+            '    #bofqi_embed {\n' +
+            '        height: 100% !important;\n' +
+            '    }\n' +
             '}\n' +
             '</style>\n'
         );

@@ -9,7 +9,8 @@
     "background": {
         "scripts": [
             "./third-party/js/zepto.min.js",
-            "./js/bg/xOrigin.js"
+            "./js/bg/xOrigin.js",
+            "./js/bg/connetAPI.js"
         ]
     },
     "permissions": ["*://*.bilibili.com/*"],
@@ -26,7 +27,6 @@
             "http://bangumi.bilibili.com/anime/v/*",
             "https://secure.bilibili.com/*"
         ],
-        // "css": ["mystyles.css"],
         "js": [
             "./third-party/js/echarts.custom.js",
             "./third-party/js/zepto.min.js",
@@ -35,8 +35,5 @@
             "./js/bilibili/constVar.js",
             "./js/bilibili/mainFunc.js"
         ]
-    }],
-    "background": {
-        "scripts": ["background.js"]
-    }
+    }]
 }

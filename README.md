@@ -31,6 +31,10 @@
 - 增加智能侦测空降点的功能
 - 上线 Chrome Web Store
 
+## 已知的 Bug
+
+- 在 iframe 播放器上“网页全屏”会使播放器显示不正常
+
 ## 使用协议 && 版权声明
 
 本项目适用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 协议。
