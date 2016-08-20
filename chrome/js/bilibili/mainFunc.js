@@ -15,7 +15,7 @@ function initInfo() {
         $player = $('#bofqi_embed');
         $player.before('<style>\n' +
             '#bofqi_embed {\n' +
-            '    height: calc(100% - ' + chartSumHeight + 'px)\n' +
+            '    height: calc(100% - ' + chartSumHeight + 'px) !important\n' +
             '}\n' +
             '@media screen and (max-width: 320px) {\n' +
             '    #' + domChartId + '-container {\n' +
