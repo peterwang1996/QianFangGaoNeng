@@ -9,7 +9,14 @@ function initInfo() {
     if ($('#player_placeholder').length > 0) {
         $player = $('#player_placeholder');
         console.log($player);
-        player = $player[0];
+        player = {
+            seek: function(sec) {
+                $player[0].jwSeek(sec);
+            },
+            getPos: function() {
+                return $player[0].jwGetPosition();
+            }
+        }
         cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else if ($('#bofqi_embed')) {
         $player = $('#bofqi_embed');
@@ -27,10 +34,17 @@ function initInfo() {
             '}\n' +
             '</style>\n'
         );
-        player = $player[0];
+        player = {
+            seek: function(sec) {
+                $player[0].jwSeek(sec);
+            },
+            getPos: function() {
+                return $player[0].jwGetPosition(sec);
+            }
+        }
         cid = $player.parent().html().match(/cid=\d*/)[0].slice(4);
     } else {
-        console.warn('Unsupported player');
+        throw new Error('Unsupported player');
     }
 
     console.log(player);
@@ -63,52 +77,6 @@ function parseDanmukuData(danmukuXml) {
     });
     console.log(danmukuData);
     return danmukuData;
-}
-
-/**
- * 在图表和播放器之间添加钩子以实现进度条同步
- * @param {Object} myChart 图表的 eCharts 对象
- * @param {Object} player 播放器对象
- * @param {Number} step 图表上每一格对应的秒数
- */
-function addPlayerHook(myChart, player, step) {
-    if (!player) {
-        console.warn('Waring: Old player is not supported.');
-    } else {
-        chartOption.series.markLine.data.push(chartTimeline);
-        var lastTime = 0;
-        myChart.on('click', function(params) {
-            var timeStamp = null;
-            if (params.componentType === "markPoint") {
-                timeStamp = params.data.coord[0];
-            } else {
-                timeStamp = params.dataIndex;
-            }
-            var time = timeStamp * step - timeInAdvance;
-            if (time < 0) {
-                time = 0;
-            }
-            player.jwSeek(time);
-        });
-
-        var timelineMove = setInterval(function() {
-            try {
-                var nowTime = Math.floor(player.jwGetPosition());
-            } catch (e) {
-                if ((e + '') === 'TypeError: player.jwGetPosition is not a function') {
-                    console.log('Player not ready yet');
-                } else {
-                    console.error(e);
-                }
-            }
-            if (nowTime !== lastTime) {
-                chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
-                chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
-                myChart.setOption(chartOption);
-                lastTime = nowTime;
-            }
-        }, 100);
-    }
 }
 
 /**

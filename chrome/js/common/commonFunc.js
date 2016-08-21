@@ -123,3 +123,49 @@ function findKeyPoints(danmukuData, step, maxLength) {
     // console.log(keyPoints);
     return keyPoints;
 }
+
+/**
+ * 在图表和播放器之间添加钩子以实现进度条同步
+ * @param {Object} myChart 图表的 eCharts 对象
+ * @param {Object} player 播放器对象
+ * @param {Number} step 图表上每一格对应的秒数
+ */
+function addPlayerHook(myChart, player, step) {
+    if (!player) {
+        throw new Error('Invalid player');
+    } else {
+        chartOption.series.markLine.data.push(chartTimeline);
+        var lastTime = 0;
+        myChart.on('click', function(params) {
+            var timeStamp = null;
+            if (params.componentType === "markPoint") {
+                timeStamp = params.data.coord[0];
+            } else {
+                timeStamp = params.dataIndex;
+            }
+            var time = timeStamp * step - timeInAdvance;
+            if (time < 0) {
+                time = 0;
+            }
+            player.seek(time);
+        });
+
+        var timelineMove = setInterval(function() {
+            try {
+                var nowTime = Math.floor(player.getPos());
+            } catch (e) {
+                if ((e + '').indexOf('is not a function') !== -1) {
+                    console.log('Player not ready yet');
+                } else {
+                    console.error(e);
+                }
+            }
+            if (nowTime !== lastTime) {
+                chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
+                chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
+                myChart.setOption(chartOption);
+                lastTime = nowTime;
+            }
+        }, 100);
+    }
+}
