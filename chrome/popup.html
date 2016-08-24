@@ -1,10 +1,35 @@
 <html>
-    <head>
-        <title>前方高能 - PopUp</title>
-        <meta charset="utf-8">
-        <meta name="author" content="Peter Wang">
-    </head>
-    <body>
-        <p>hello, world</p>
-    </body>
+
+<head>
+    <title>前方高能 - PopUp</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Peter Wang">
+    <link rel="stylesheet" href="./third-party/css/weui.min.css">
+    <style>
+        html {
+            width: 360px;
+        }
+        
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            margin: 12px auto 0 auto;
+            font-family: "Segoe UI", Arial, Helvetica, "Microsoft Jhenghei", "Hiragino Sans GB", "WenQuanYi Zen Hei", "Microsoft Yahei", SimHei, STHeiti, "WenQuanYi Micro Hei", sans-serif;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>前方高能</h1>
+    <div class="weui_cells weui_cells_form">
+        <div class="weui_cell weui_cell_switch">
+            <div class="weui_cell_hd weui_cell_primary">显示图表（对新标签页有效）</div>
+            <div class="weui_cell_ft">
+                <input class="weui_switch" id="option-is-open" type="checkbox">
+            </div>
+        </div>
+    </div>
+    <script src="./js/popup/options.js"></script>
+</body>
+
 </html>

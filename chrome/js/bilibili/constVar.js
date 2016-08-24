@@ -1,5 +1,3 @@
-var isOpen = true;
-var domChartId = 'danmuku-chart';
 var chartHeight = 160;
 var chartMargin = 10;
 var chartSumHeight = chartHeight + chartMargin;

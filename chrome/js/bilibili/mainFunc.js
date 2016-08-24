@@ -92,7 +92,9 @@ function afterGettingXml(danmukuXml) {
 }
 
 // START
-if (isOpen) {
+var myInitInfo = null;
+
+function startChart() {
     if ($('iframe').length > 0) {
         var $iframe = $('iframe')
         var oriHeight = parseInt($iframe.attr('height'));
@@ -100,7 +102,7 @@ if (isOpen) {
         $iframe.attr('height', tarHeight);
         $iframe.css('height', tarHeight + 'px');
     } else {
-        var myInitInfo = initInfo();
+        myInitInfo = initInfo();
         var danmukuAddress = 'http://comment.bilibili.com/' + myInitInfo.cid + '.xml';
         var danmukuXml = null;
 

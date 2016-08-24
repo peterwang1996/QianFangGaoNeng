@@ -1,3 +1,18 @@
+chrome.storage.sync.get(null, function(result) {
+    console.log(result);
+    try {
+        isOpen = result.isOpen;
+        if (isOpen) {
+            startChart();
+        }
+    } catch (error) {
+        chrome.storage.sync.set({
+            'isOpen': ture
+        });
+    }
+});
+
+var domChartId = 'danmuku-chart';
 var keyWords = {
     withTimePoint: [
         '空降',

@@ -15,7 +15,10 @@
             "./js/bg/connetAPI.js"
         ]
     },
-    "permissions": ["*://*.bilibili.com/*"],
+    "permissions": [
+        "*://*.bilibili.com/*", 
+        "storage"
+    ],
     "browser_action": {
         "default_title": "",
         "default_popup": "popup.html"
@@ -32,7 +35,7 @@
             "./third-party/js/echarts.custom.js",
             "./third-party/js/zepto.min.js",
             "./js/common/commonConstVar.js",
-            "./js/common/commonFunc.js",
+            "./js/common/danmukuProcess.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/mainFunc.js"
         ]
