@@ -4,7 +4,9 @@
     "description": "A small tool for visualizing the density of damuku from videos in Bilibili",
     "manifest_version": 2,
     "icons": {
-        "128": "icon_128.png"
+        "16": "./img/icon16.png",
+        "48": "./img/icon48.png",
+        "128": "./img/icon128.png"
     },
     "background": {
         "scripts": [
@@ -16,7 +18,6 @@
     "permissions": ["*://*.bilibili.com/*"],
     "browser_action": {
         "default_title": "",
-        "default_icon": "icon_19.png",
         "default_popup": "popup.html"
     },
 
