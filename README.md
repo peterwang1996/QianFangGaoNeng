@@ -1,5 +1,7 @@
 # 前方高能
 
+该插件已上架 Chrome Web Store ，[点击这里](https://chrome.google.com/webstore/detail/%E5%89%8D%E6%96%B9%E9%AB%98%E8%83%BD/aifplikdlpjakalndboebgcaichdeoeo?utm_source=chrome-ntp-icon)访问。
+
 ## 这是个什么玩意儿
 
 这是本 UP 主，哦不，本宝宝闲得蛋疼，写的一个黑科技小插件，用于 Chrome 浏览器（理论上 Webkit 内核的国产浏览器应该也可以用，但我还没测试过），作用就是在 Bilibili 的视频下面显示这么样一个图表：
@@ -25,11 +27,9 @@
 
 ## 计划中的功能
 
-- 弄个像样的 Icon
 - 对 Bilibili 的第三方播放器（如优酷腾讯爱奇艺的嵌入播放器）添加时间轴和自动空降的支持
 - 增加对 AcFun 的支持
 - 增加智能侦测空降点的功能
-- 上线 Chrome Web Store
 
 ## 已知的 Bug
 
@@ -44,7 +44,7 @@ Copyright © 2016 Peter Wang, All Rights Reserved
 
 ## 致谢
 
-- 感谢 [Zepto.js](http://zeptojs.com/) 和 [echarts](http://echarts.baidu.com/) 两大开源项目的强力驱动
+- 感谢 [Zepto.js](http://zeptojs.com/) 、[WeUI](https://github.com/weui/weui) 和 [echarts](http://echarts.baidu.com/) 等开源项目的强力驱动
 - 感谢 [coplay](https://github.com/Justineo/coplay) 项目提供的灵感和对 Bilibili 播放器 API 的解读
 - 感谢光速兔同学（[@lightrabbit](https://github.com/lightrabbit)）对本项目以及本人在前端技术的探索道路上一直以来无私的帮助
 
@@ -53,3 +53,5 @@ Copyright © 2016 Peter Wang, All Rights Reserved
 [V0.1 @ 2016-08-18] 基本功能完成，上线 GitHub
 
 [V0.2 @ 2016-08-18] 完成 Bilibili iframe 播放器的适配
+
+[V1.0 @ 2016-08-18] 增加功能开关，更换图标，上线 Chrome Web Store
