@@ -17,8 +17,8 @@ function timeNumToStr(n) {
 
 /**
  * 将诸如 '02:33' 的字符串转化成以秒为单位的时间整数数
- * @return {String} str 时间字符串
  * @param {Number} n 时间（整数，单位为秒）
+ * @return {String} str 时间字符串
  */
 function timeStrToNum(str) {
     var timeArray = str.split(':').map(function(str) {
@@ -75,19 +75,25 @@ function makeChartData(danmukuData) {
 
 /**
  * 绘制并返回 eCharts 图表
- * @param {Object} $player 播放器 jQuery 对象 
+ * @param {Object} $drawAfter 在哪个元素之后绘制图表
  * @param {Object} danmukuData 处理过的弹幕数据
  * @returns {Object} 绘制好的 eCharts 对象
  */
-function drawChart($player, danmukuData) {
-    $player.css('margin-bottom', '0');
-    $player.after(domChartInner);
+function drawChart($drawAfter, danmukuData) {
+    $drawAfter.css('margin-bottom', '0');
+    console.log($drawAfter);
+    console.log(domChartInner);
+    $drawAfter.after(domChartInner);
+    console.log(document.getElementById(domChartId));
     var myChart = echarts.init(document.getElementById(domChartId));
     chartOption.xAxis.data = danmukuData.partDanmukuTime;
     chartOption.series.data = danmukuData.partDanmukuRho;
     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
     myChart.setOption(chartOption);
-    return myChart;
+    return {
+        myChart: myChart,
+        $myChart: $('#' + domChartId)
+    };
 }
 
 
@@ -116,11 +122,6 @@ function findKeyPoints(danmukuData, step, maxLength) {
             }
         }
     }
-
-    // console.log(keyPoints.map(function(n) {
-    //     return timeNumToStr((n*step));
-    // }));
-    // console.log(keyPoints);
     return keyPoints;
 }
 
@@ -154,12 +155,13 @@ function addPlayerHook(myChart, player, step) {
             try {
                 var nowTime = Math.floor(player.getPos());
             } catch (e) {
-                if ((e + '').indexOf('is not a function') !== -1) {
-                    console.log('Player not ready yet');
+                if ((e + '').indexOf('Cannot read property \'currentTime\' of undefined') !== -1) {
+                    console.warn('Player not ready yet');
                 } else {
                     console.error(e);
                 }
             }
+            // console.log(nowTime);
             if (nowTime !== lastTime) {
                 chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
                 chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
@@ -168,4 +170,13 @@ function addPlayerHook(myChart, player, step) {
             }
         }, 100);
     }
+}
+
+/**
+ * 在图标上显示提示升级的信息
+ * @param {Object} $myChart 图表的 jQuery 对象 
+ */
+function tellUpdate($myChart) {
+    console.log($myChart);
+    $myChart.after(tellUpdateEle);
 }

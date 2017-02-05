@@ -10,9 +10,7 @@
     },
     "background": {
         "scripts": [
-            "./third-party/js/zepto.min.js",
-            "./js/bg/xOrigin.js",
-            "./js/bg/connetAPI.js"
+            "./third-party/js/jquery-3.1.1.min.js"
         ]
     },
     "permissions": [
@@ -33,11 +31,11 @@
         ],
         "js": [
             "./third-party/js/echarts.custom.js",
-            "./third-party/js/zepto.min.js",
-            "./js/common/commonConstVar.js",
-            "./js/common/danmukuProcess.js",
+            "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
-            "./js/bilibili/mainFunc.js"
+            "./js/common/danmukuProcess.js",
+            "./js/bilibili/mainFunc.js",
+            "./js/common/commonConstVar.js"
         ]
     }]
 }
