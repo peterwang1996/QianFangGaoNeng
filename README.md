@@ -24,23 +24,22 @@
 
 - 在 Bilibili 的所有视频下方显示弹幕密度图表
 - 在 Bilibili 的所有官方播放器实现时间轴和自动空降功能
+- 仅官方 HTML5 播放器完美支持，对 Flash 播放器仅提供受限功能，且不再维护
 
 ## 计划中的功能
 
-- 对 Bilibili 的第三方播放器（如优酷腾讯爱奇艺的嵌入播放器）添加时间轴和自动空降的支持
 - 增加对 AcFun 的支持
 - 增加智能侦测空降点的功能
 
 ## 已知的 Bug
 
-- 在 iframe 播放器上“网页全屏”会使播放器显示不正常
-- 图表的进度条以最后一条弹幕的发送时间为准，所以有时图表进度条会与实际进度条不等长
+- 尚未支持官方番剧页面
 
 ## 使用协议 && 版权声明
 
 本项目适用 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) 协议。
 
-Copyright © 2016 Peter Wang, All Rights Reserved
+Copyright © 2016 ~ 2017, Peter Wang, All Rights Reserved
 
 ## 致谢
 
@@ -50,8 +49,10 @@ Copyright © 2016 Peter Wang, All Rights Reserved
 
 ## 更新日志
 
-[V0.1 @ 2016-08-18] 基本功能完成，上线 GitHub
+**[V0.1 @ 2016-08-18]** 基本功能完成，上线 GitHub
 
-[V0.2 @ 2016-08-18] 完成 Bilibili iframe 播放器的适配
+**[V0.2 @ 2016-08-18]** 完成 Bilibili iframe 播放器的适配
 
-[V1.0 @ 2016-08-18] 增加功能开关，更换图标，上线 Chrome Web Store
+**[V1.0 @ 2016-08-18]** 增加功能开关，更换图标，上线 Chrome Web Store
+
+**[V1.1 @ 2017-02-15]** 对 Bilibili 官方 HTML5 播放器的支持
