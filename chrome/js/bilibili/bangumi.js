@@ -14,6 +14,7 @@ function getBiliPlayer(success, fail) {
             if ($('iframe.bilibiliHtml5Player').length >= 1) {
                 $rawIframe = $('iframe.bilibiliHtml5Player');
                 clearInterval(gettingIframe);
+                gettingIframe = null;
                 var iframeSrc = $rawIframe.attr('src');
                 if (iframeSrc.slice(0, 2) === '//') {
                     $rawIframe.attr('src', window.location.protocol + iframeSrc);
@@ -29,6 +30,7 @@ function getBiliPlayer(success, fail) {
                             }
                         }
                         clearInterval(gettingPlayer);
+                        gettingPlayer = null;
                         success.call(this, player);
                     } else {
                         console.info('Player not ready');

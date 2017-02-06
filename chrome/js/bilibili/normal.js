@@ -20,6 +20,7 @@ function getBiliPlayer(success, fail) {
                     }
                 }
                 clearInterval(gettingPlayer);
+                gettingPlayer = null;
                 success.call(this, player);
             } else {
                 console.info('Player not ready');

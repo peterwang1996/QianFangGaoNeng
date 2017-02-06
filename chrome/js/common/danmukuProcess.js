@@ -96,6 +96,7 @@ function refreshChartData($myChart, danmukuData) {
     chartOption.xAxis.data = danmukuData.partDanmukuTime;
     chartOption.series.data = danmukuData.partDanmukuRho;
     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
+    console.log(chartOption);
     myChart.setOption(chartOption);
     return myChart;
 }
@@ -140,16 +141,20 @@ function addPlayerHook(myChart, player, step) {
     if (!player) {
         throw new Error('Invalid player');
     } else {
+        if (chartOption.series.markLine.data.length >= 2) {
+            chartOption.series.markLine.data.pop();
+        }
         chartOption.series.markLine.data.push(chartTimeline);
         var lastTime = 0;
         myChart.on('click', function (params) {
             var timeStamp = null;
+            console.log(params);
             if (params.componentType === "markPoint") {
                 timeStamp = params.data.coord[0];
             } else {
                 timeStamp = params.dataIndex;
             }
-            var time = timeStamp * step - timeInAdvance;
+            var time = timeStrToNum(params.name) - timeInAdvance;
             if (time < 0) {
                 time = 0;
             }

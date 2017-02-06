@@ -10,6 +10,11 @@ function getCid(avObj) {
     }).responseText).cid;
 }
 
+/**
+ * 根据 cid 号获得弹幕的 XML 文档
+ * @param {Object} cid 视频的 cid
+ * @returns {String} 弹幕的 XML 文档
+ */
 function getDanmukuXML(cid) {
     var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
     var danmukuXml = null;
@@ -44,21 +49,39 @@ function parseDanmukuData(danmukuXml) {
     return danmukuData;
 }
 
+/**
+ * 更新弹幕数据
+ * @param {Object} $myChart 预留的 myChart jQuery 对象
+ * @param {Array} newDanmukuData （可选）弹幕数据，若此项为空，那么函数会从网络重新获得弹幕数据
+ * @returns {Object} myChart 生成的eCharts 对象
+ */
+function updateDanmukuData($myChart, newDanmukuData) {
+    if (!newDanmukuData) {
+        var avObj = getAvObj();
+        var cid = getCid(avObj);
+        var danmukuXml = getDanmukuXML(cid);
+        newDanmukuData = parseDanmukuData(danmukuXml);
+    }
+    var chartData = makeChartData(newDanmukuData);
+    // var keyPoints = findKeyPoints(newDanmukuData, chartData.step, chartData.maxLength);
+    var myChart = refreshChartData($myChart, chartData);
+    danmukuData = newDanmukuData;
+    getBiliPlayer(function (biliPlayerForControl) {
+        console.log(biliPlayerForControl);
+        addPlayerHook(myChart, biliPlayerForControl, chartData.step);
+    }, function () {
+        tellUpdate($myChart);
+    });
+    return newDanmukuData;
+}
+
 // START
 
 function startChart() {
-    var avObj = getAvObj();
-    var cid = getCid(avObj);
-    var danmukuXml = getDanmukuXML(cid);
-    var danmukuData = parseDanmukuData(danmukuXml);
-    var chartData = makeChartData(danmukuData);
-    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
     var $myChart = initEChartsDom($(containerSelector));
-    var myChart = refreshChartData($myChart, chartData);
-    getBiliPlayer(function(biliPlayerForControl) {
-        console.log(biliPlayerForControl);
-        addPlayerHook(myChart, biliPlayerForControl, chartData.step);
-    }, function() {
-        tellUpdate($myChart);
-    });
+    var danmukuData = updateDanmukuData($myChart, null);
+    addEventListener('hashchange', function() {
+        $(domChartId).html('');
+        updateDanmukuData($myChart, null);
+    })
 }
