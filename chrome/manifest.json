@@ -23,16 +23,29 @@
     },
 
     "content_scripts": [{
-        "all_frames": true,
+        "all_frames": false,
         "matches": [
-            "http://www.bilibili.com/video/av*",
-            "http://bangumi.bilibili.com/anime/v/*",
-            "https://secure.bilibili.com/*"
+            "*://www.bilibili.com/video/av*"
         ],
         "js": [
             "./third-party/js/echarts.custom.js",
             "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
+            "./js/bilibili/normal.js",
+            "./js/common/danmukuProcess.js",
+            "./js/bilibili/mainFunc.js",
+            "./js/common/commonConstVar.js"
+        ]
+    }, {
+        "all_frames": false,
+        "matches": [
+            "*://bangumi.bilibili.com/anime/*/play*"
+        ],
+        "js": [
+            "./third-party/js/echarts.custom.js",
+            "./third-party/js/jquery-3.1.1.min.js",
+            "./js/bilibili/constVar.js",
+            "./js/bilibili/bangumi.js",
             "./js/common/danmukuProcess.js",
             "./js/bilibili/mainFunc.js",
             "./js/common/commonConstVar.js"

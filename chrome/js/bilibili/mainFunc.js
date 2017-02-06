@@ -1,34 +1,24 @@
-var myInitInfo = null;
-
 /**
- * 获得视频 cid 以及播放器接口
- * @returns {Object} player: 抽象出的播放器对象， cid: 视频 cid
+ * 根据 av 号获得视频的 cid
+ * @param {Object} avObj av号及页码信息
+ * @returns {String} 获取到的 cid
  */
-function initInfo() {
-    var player = null;
-    var cid = null;
+function getCid(avObj) {
+    return $.parseJSON($.ajax({
+        url: 'http://api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avObj.avId + '&page=' + avObj.pageNum,
+        async: false,
+    }).responseText).cid;
+}
 
-    if (localStorage.defaulth5 === '1') {
-        player = {
-            seek: function (sec) {
-                $(playerSelector)[0].currentTime = sec;
-            },
-            getPos: function () {
-                return $(playerSelector)[0].currentTime;
-            }
-        }
-    }
-
-    var responseHTML = $.ajax({
-        url: window.location.href,
-        async: false
-    }).responseText;
-    cid = responseHTML.split('\"\/\/static\.hdslb\.com\/play.swf\"\, \"cid\=')[1].split('\&')[0];
-    console.log(cid);
-    return {
-        player: player,
-        cid: cid
-    };
+function getDanmukuXML(cid) {
+    var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
+    var danmukuXml = null;
+    return danmukuXml = $.ajax({
+        url: danmukuAddress,
+        processData: false,
+        cache: false,
+        async: false,
+    }).responseXML;
 }
 
 /**
@@ -54,40 +44,21 @@ function parseDanmukuData(danmukuXml) {
     return danmukuData;
 }
 
-/**
- * 在获取到弹幕 XML 之后需要做的所有事情
- * @param {Object} danmukuXml 弹幕 XML 对象
- */
-function afterGettingXml(danmukuXml) {
-    var danmukuData = parseDanmukuData(danmukuXml);
-    var chartData = makeChartData(danmukuData);
-    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
-    var myChartSet = drawChart($(containerSelector), chartData);
-    console.log(myInitInfo.player);
-    if (myInitInfo.player) {
-        addPlayerHook(myChartSet.myChart, myInitInfo.player, chartData.step);
-    } else {
-        tellUpdate(myChartSet.$myChart);
-    }
-}
-
 // START
 
 function startChart() {
-    myInitInfo = initInfo();
-    var danmukuAddress = 'http://comment.bilibili.com/' + myInitInfo.cid + '.xml';
-    var danmukuXml = null;
-
-    // 获取弹幕 XML 数据。由于是异步过程，就单独拿出来了
-    try {
-        danmukuXml = $.ajax({
-            url: danmukuAddress,
-            processData: false,
-            cache: false,
-            async: false,
-        }).responseXML;
-        afterGettingXml(danmukuXml);
-    } catch (e) {
-        console.error(e);
-    }
+    var avObj = getAvObj();
+    var cid = getCid(avObj);
+    var danmukuXml = getDanmukuXML(cid);
+    var danmukuData = parseDanmukuData(danmukuXml);
+    var chartData = makeChartData(danmukuData);
+    var keyPoints = findKeyPoints(danmukuData, chartData.step, chartData.maxLength);
+    var $myChart = initEChartsDom($(containerSelector));
+    var myChart = refreshChartData($myChart, chartData);
+    getBiliPlayer(function(biliPlayerForControl) {
+        console.log(biliPlayerForControl);
+        addPlayerHook(myChart, biliPlayerForControl, chartData.step);
+    }, function() {
+        tellUpdate($myChart);
+    });
 }

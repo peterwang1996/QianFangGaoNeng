@@ -21,7 +21,7 @@ function timeNumToStr(n) {
  * @return {String} str 时间字符串
  */
 function timeStrToNum(str) {
-    var timeArray = str.split(':').map(function(str) {
+    var timeArray = str.split(':').map(function (str) {
         return parseInt(str);
     });
     return timeArray[0] * 60 + timeArray[1];
@@ -29,14 +29,14 @@ function timeStrToNum(str) {
 
 /**
  * 将弹幕发送时间数据转化成图表数据
- * @param 弹幕时间数据，每个元素是弹幕发送的时间
+ * @param {Array} danmukuData 弹幕时间数据，每个元素是弹幕发送的时间
  * @returns 弹幕的具体数据
  */
 function makeChartData(danmukuData) {
-    var danmukuTime = danmukuData.map(function(n) {
+    var danmukuTime = danmukuData.map(function (n) {
         return n.time;
     })
-    danmukuTime.sort(function(a, b) {
+    danmukuTime.sort(function (a, b) {
         return b - a;
     });
     var maxLength = danmukuTime[0];
@@ -72,28 +72,32 @@ function makeChartData(danmukuData) {
     };
 }
 
-
 /**
- * 绘制并返回 eCharts 图表
+ * 初始化 eCharts 图表容器
  * @param {Object} $drawAfter 在哪个元素之后绘制图表
- * @param {Object} danmukuData 处理过的弹幕数据
- * @returns {Object} 绘制好的 eCharts 对象
+ * @returns {Object} 初始化 eCharts 元素的 jQuery 对象
  */
-function drawChart($drawAfter, danmukuData) {
+function initEChartsDom($drawAfter) {
     $drawAfter.css('margin-bottom', '0');
     console.log($drawAfter);
     console.log(domChartInner);
     $drawAfter.after(domChartInner);
-    console.log(document.getElementById(domChartId));
-    var myChart = echarts.init(document.getElementById(domChartId));
+    return $('#' + domChartId);
+}
+
+/**
+ * 绘制并返回 eCharts 图表
+ * @param {Object} $myChart eCharts 元素的 jQuery 对象
+ * @param {Object} danmukuData 处理过的弹幕数据
+ * @returns {Object} 绘制好的 eCharts 对象
+ */
+function refreshChartData($myChart, danmukuData) {
+    var myChart = echarts.init($myChart[0]);
     chartOption.xAxis.data = danmukuData.partDanmukuTime;
     chartOption.series.data = danmukuData.partDanmukuRho;
     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
     myChart.setOption(chartOption);
-    return {
-        myChart: myChart,
-        $myChart: $('#' + domChartId)
-    };
+    return myChart;
 }
 
 
@@ -132,12 +136,13 @@ function findKeyPoints(danmukuData, step, maxLength) {
  * @param {Number} step 图表上每一格对应的秒数
  */
 function addPlayerHook(myChart, player, step) {
+    var nowTime = 0;
     if (!player) {
         throw new Error('Invalid player');
     } else {
         chartOption.series.markLine.data.push(chartTimeline);
         var lastTime = 0;
-        myChart.on('click', function(params) {
+        myChart.on('click', function (params) {
             var timeStamp = null;
             if (params.componentType === "markPoint") {
                 timeStamp = params.data.coord[0];
@@ -151,17 +156,8 @@ function addPlayerHook(myChart, player, step) {
             player.seek(time);
         });
 
-        var timelineMove = setInterval(function() {
-            try {
-                var nowTime = Math.floor(player.getPos());
-            } catch (e) {
-                if ((e + '').indexOf('Cannot read property \'currentTime\' of undefined') !== -1) {
-                    console.warn('Player not ready yet');
-                } else {
-                    console.error(e);
-                }
-            }
-            // console.log(nowTime);
+        var timelineMove = setInterval(function () {
+            var nowTime = Math.floor(player.getPos());
             if (nowTime !== lastTime) {
                 chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
                 chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);

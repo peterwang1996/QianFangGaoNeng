@@ -13,7 +13,6 @@ var tellUpdateEle = '<div id="tell-update" style="width: 980px; height: ' + char
     '</div>';
 var danmukuPart = 60;
 var timeInAdvance = 5;
-var playerSelector = '.bilibili-player-video video';
 var containerSelector = '#bofqi';
 
 var chartOption = {
