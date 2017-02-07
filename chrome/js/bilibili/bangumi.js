@@ -5,7 +5,6 @@
  * @returns {Object} 抽象出的播放器对象
  */
 function getBiliPlayer(success, fail) {
-    var player = null;
     var rawPlayer = null;
     var $rawIframe = null;
 

@@ -8,8 +8,8 @@ var domChartInner = '<div id="' + domChartId + '-container" style="position: rel
 var tellUpdateEle = '<div id="tell-update" style="width: 980px; height: ' + chartHeight + 'px; background: rgba(255, 255, 255, 0.8); position: absolute; top: 0; left: 0; text-align: center;">' +
     '<p style="font-size: 24px; color: #111;">你可能用了假的 HTML5 播放器，' +
     '<a href="http://www.bilibili.com/html/help.html#p" target="_blank" style="color: #00a1d6; height: ' + chartHeight + 'px; line-height: ' + chartHeight + 'px;">点击这里</a>' +
-    '去升级吧！</p>'+
-    '<div style="width: 48px; height: 48px; font-size: 36px; color: #666; position: absolute; top: 5px; right: 5px; cursor: pointer;" onclick="$(\'#tell-update\').remove();">×</div>'+
+    '去升级吧！</p>' +
+    '<div style="width: 48px; height: 48px; font-size: 36px; color: #666; position: absolute; top: 5px; right: 5px; cursor: pointer;" onclick="$(\'#tell-update\').remove();">×</div>' +
     '</div>';
 var danmukuPart = 60;
 var timeInAdvance = 5;
@@ -79,7 +79,15 @@ var chartOption = {
                         formatter: '{b}:\n{c}'
                     }
                 }
-            }, ]
+            }, {
+                name: '时间轴',
+                xAxis: 0,
+                label: {
+                    normal: {
+                        formatter: '00:00'
+                    }
+                }
+            }]
         },
         markPoint: {
             symbolSize: 60,
@@ -92,13 +100,3 @@ var chartOption = {
         data: null
     }
 };
-
-var chartTimeline = {
-    name: '时间轴',
-    xAxis: 0,
-    label: {
-        normal: {
-            formatter: '00:00'
-        }
-    }
-}

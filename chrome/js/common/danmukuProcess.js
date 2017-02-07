@@ -45,8 +45,6 @@ function makeChartData(danmukuData) {
     var partDanmukuTime = [];
     var partDanmukuRho = [];
     var step = maxLength > danmukuPart ? Math.floor(maxLength / danmukuPart) : 1;
-    console.log(step);
-
     for (var i = 0; i <= maxLength; i += step) {
         partDanmukuTime.push(timeNumToStr(i));
         partDanmukuRho.push(0);
@@ -56,9 +54,6 @@ function makeChartData(danmukuData) {
         var curPart = Math.floor(danmukuTime[i] / step);
         partDanmukuRho[curPart] = partDanmukuRho[curPart] + 1;
     }
-
-    console.log(partDanmukuRho);
-
     for (var i = 0; i < partDanmukuRho.length; i++) {
         partDanmukuRho[i] = (partDanmukuRho[i] / step).toFixed(2);
     }
@@ -79,28 +74,33 @@ function makeChartData(danmukuData) {
  */
 function initEChartsDom($drawAfter) {
     $drawAfter.css('margin-bottom', '0');
-    console.log($drawAfter);
-    console.log(domChartInner);
     $drawAfter.after(domChartInner);
     return $('#' + domChartId);
 }
 
 /**
- * 绘制并返回 eCharts 图表
- * @param {Object} $myChart eCharts 元素的 jQuery 对象
- * @param {Object} danmukuData 处理过的弹幕数据
- * @returns {Object} 绘制好的 eCharts 对象
+ * 根据弹幕数据更新 myChart 数据
+ * @param {Object} myChart eCharts 对象
+ * @param {Object} chartData 处理过的弹幕数据
+ * @param {Number} step 图表上一格对应的时间
  */
-function refreshChartData($myChart, danmukuData) {
-    var myChart = echarts.init($myChart[0]);
-    chartOption.xAxis.data = danmukuData.partDanmukuTime;
-    chartOption.series.data = danmukuData.partDanmukuRho;
-    chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
-    console.log(chartOption);
+function refreshChartData(myChart, chartData, step) {
+    chartOption.xAxis.data = chartData.partDanmukuTime;
+    chartOption.series.data = chartData.partDanmukuRho;
+    chartOption.series.markLine.data[0].yAxis = chartData.avgRho;
     myChart.setOption(chartOption);
-    return myChart;
+    myChart.danmuku.step = step;
 }
 
+// function refreshChartData($myChart, danmukuData) {
+//     var myChart = echarts.init($myChart[0]);
+//     chartOption.xAxis.data = danmukuData.partDanmukuTime;
+//     chartOption.series.data = danmukuData.partDanmukuRho;
+//     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
+//     console.log(chartOption);
+//     myChart.setOption(chartOption);
+//     return myChart;
+// }
 
 function findKeyPoints(danmukuData, step, maxLength) {
     var keyPoints = [];
@@ -134,27 +134,23 @@ function findKeyPoints(danmukuData, step, maxLength) {
  * 在图表和播放器之间添加钩子以实现进度条同步
  * @param {Object} myChart 图表的 eCharts 对象
  * @param {Object} player 播放器对象
- * @param {Number} step 图表上每一格对应的秒数
  */
-function addPlayerHook(myChart, player, step) {
+function addPlayerHook(myChart, player) {
     var nowTime = 0;
     if (!player) {
         throw new Error('Invalid player');
     } else {
-        if (chartOption.series.markLine.data.length >= 2) {
-            chartOption.series.markLine.data.pop();
-        }
-        chartOption.series.markLine.data.push(chartTimeline);
         var lastTime = 0;
         myChart.on('click', function (params) {
             var timeStamp = null;
-            console.log(params);
+            var time = null;
             if (params.componentType === "markPoint") {
-                timeStamp = params.data.coord[0];
+                time = params.data.coord[0] * myChart.danmuku.step;
             } else {
                 timeStamp = params.dataIndex;
+                time = timeStrToNum(params.name);
             }
-            var time = timeStrToNum(params.name) - timeInAdvance;
+            time -= timeInAdvance;
             if (time < 0) {
                 time = 0;
             }
@@ -165,7 +161,7 @@ function addPlayerHook(myChart, player, step) {
             var nowTime = Math.floor(player.getPos());
             if (nowTime !== lastTime) {
                 chartOption.series.markLine.data[1].label.normal.formatter = timeNumToStr(nowTime);
-                chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / step);
+                chartOption.series.markLine.data[1].xAxis = Math.floor(nowTime / myChart.danmuku.step);
                 myChart.setOption(chartOption);
                 lastTime = nowTime;
             }
@@ -178,6 +174,5 @@ function addPlayerHook(myChart, player, step) {
  * @param {Object} $myChart 图表的 jQuery 对象 
  */
 function tellUpdate($myChart) {
-    console.log($myChart);
     $myChart.after(tellUpdateEle);
 }

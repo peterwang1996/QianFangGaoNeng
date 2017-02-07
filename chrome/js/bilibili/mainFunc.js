@@ -32,7 +32,7 @@ function getDanmukuXML(cid) {
  * @returns {Array} 弹幕数据， time: 整数发送时间， content: 弹幕内容
  */
 function parseDanmukuData(danmukuXml) {
-    console.log(danmukuXml);
+
     var danmukuData = [];
     $(danmukuXml).find('d').each(function () {
         var param = $(this).attr('p').split(',').map(function (str) {
@@ -45,17 +45,16 @@ function parseDanmukuData(danmukuXml) {
             });
         }
     });
-    console.log(danmukuData);
     return danmukuData;
 }
 
 /**
  * 更新弹幕数据
- * @param {Object} $myChart 预留的 myChart jQuery 对象
+ * @param {Object} myChart 预留的 eCharts 对象
  * @param {Array} newDanmukuData （可选）弹幕数据，若此项为空，那么函数会从网络重新获得弹幕数据
  * @returns {Object} myChart 生成的eCharts 对象
  */
-function updateDanmukuData($myChart, newDanmukuData) {
+function updateDanmukuData(myChart, newDanmukuData) {
     if (!newDanmukuData) {
         var avObj = getAvObj();
         var cid = getCid(avObj);
@@ -63,15 +62,8 @@ function updateDanmukuData($myChart, newDanmukuData) {
         newDanmukuData = parseDanmukuData(danmukuXml);
     }
     var chartData = makeChartData(newDanmukuData);
+    refreshChartData(myChart, chartData, chartData.step);
     // var keyPoints = findKeyPoints(newDanmukuData, chartData.step, chartData.maxLength);
-    var myChart = refreshChartData($myChart, chartData);
-    danmukuData = newDanmukuData;
-    getBiliPlayer(function (biliPlayerForControl) {
-        console.log(biliPlayerForControl);
-        addPlayerHook(myChart, biliPlayerForControl, chartData.step);
-    }, function () {
-        tellUpdate($myChart);
-    });
     return newDanmukuData;
 }
 
@@ -79,9 +71,21 @@ function updateDanmukuData($myChart, newDanmukuData) {
 
 function startChart() {
     var $myChart = initEChartsDom($(containerSelector));
-    var danmukuData = updateDanmukuData($myChart, null);
-    addEventListener('hashchange', function() {
-        $(domChartId).html('');
-        updateDanmukuData($myChart, null);
+    var myChart = echarts.init($myChart[0]);
+    myChart.danmuku = {};
+    var danmukuData = null;
+    getBiliPlayer(function (biliPlayerForControl) {
+        addPlayerHook(myChart, biliPlayerForControl);
+    }, function () {
+        tellUpdate($myChart);
+    });
+    var danmukuData = updateDanmukuData(myChart, null);
+    addEventListener('hashchange', function () {
+        updateDanmukuData(myChart, null);
+        getBiliPlayer(function (biliPlayerForControl) {
+            addPlayerHook(myChart, biliPlayerForControl);
+        }, function () {
+            tellUpdate($myChart);
+        });
     })
 }
