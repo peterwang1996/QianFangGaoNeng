@@ -2,10 +2,10 @@ var chartHeight = 160;
 var chartMargin = 10;
 var chartSumHeight = chartHeight + chartMargin;
 var domChartId = 'danmuku-chart';
-var domChartInner = '<div id="' + domChartId + '-container" style="position: relative; overflow: hidden; height: ' + chartHeight + 'px; width: 980px; margin: ' + chartMargin + 'px auto; background: #fff; border: 1px solid #e5e9ef; border-radius: 4px;">' +
+var domChartInner = '<div id="' + domChartId + '-container" style="position: relative; overflow: hidden; height: ' + chartHeight + 'px; margin: ' + chartMargin +'px auto;" class="arc-toolbar">' +
     '<div id="' + domChartId + '" style="height: ' + chartHeight + 'px">' +
     '</div></div>';
-var tellUpdateEle = '<div id="tell-update" style="width: 980px; height: ' + chartHeight + 'px; background: rgba(255, 255, 255, 0.8); position: absolute; top: 0; left: 0; text-align: center;">' +
+var tellUpdateEle = '<div id="tell-update" style="width: 100%; height: ' + chartHeight + 'px; background: rgba(255, 255, 255, 0.8); position: absolute; top: 0; left: 0; text-align: center;">' +
     '<p style="font-size: 24px; color: #111;">你可能用了假的 HTML5 播放器，' +
     '<a href="http://www.bilibili.com/html/help.html#p" target="_blank" style="color: #00a1d6; height: ' + chartHeight + 'px; line-height: ' + chartHeight + 'px;">点击这里</a>' +
     '去升级吧！</p>' +

@@ -90,6 +90,9 @@ function refreshChartData(myChart, chartData, step) {
     chartOption.series.markLine.data[0].yAxis = chartData.avgRho;
     myChart.setOption(chartOption);
     myChart.danmuku.step = step;
+    addEventListener('resize', function() {
+        myChart.resize();
+    });
 }
 
 // function refreshChartData($myChart, danmukuData) {
