@@ -35,9 +35,31 @@ function getBiliPlayer(success, fail) {
  * 获取视频的 av 号和页码数
  * @returns {Object} avObj avId: av号, pageNum: 页数
  */
+// function getAvObj() {
+//     return {
+//         avId: window.location.href.match(/\d+/g)[0],
+//         pageNum: 1
+//     }
+// }
 function getAvObj() {
-    return {
-        avId: window.location.href.match(/\d+/g)[0],
-        pageNum: 1
+    var info = window.location.href.match(/\d+/g);
+    switch (info.length) {
+        case 1:
+            return {
+                avId: info[0],
+                pageNum: 1
+            };
+        case 2:
+            return {
+                avId: info[0],
+                pageNum: info[1]
+            };
+        case 3:
+            return {
+                avId: info[0],
+                pageNum: info[2]
+            };
+        default:
+            throw new Error('Invalid URL');
     }
 }

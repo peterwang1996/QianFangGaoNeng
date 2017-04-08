@@ -4,10 +4,12 @@
  * @returns {String} 获取到的 cid
  */
 function getCid(avObj) {
-    return $.parseJSON($.ajax({
-        url: 'http://api.bilibili.com/view?type=json&appkey=8e9fc618fbd41e28&id=' + avObj.avId + '&page=' + avObj.pageNum,
+    var result = $.parseJSON($.ajax({
+        url: '//www.bilibili.com/widget/getPageList?aid=' + avObj.avId,
         async: false,
-    }).responseText).cid;
+    }).responseText)[avObj.pageNum - 1].cid;
+    console.log(result);
+    return result;
 }
 
 /**
@@ -16,7 +18,7 @@ function getCid(avObj) {
  * @returns {String} 弹幕的 XML 文档
  */
 function getDanmukuXML(cid) {
-    var danmukuAddress = 'http://comment.bilibili.com/' + cid + '.xml';
+    var danmukuAddress = '//comment.bilibili.com/' + cid + '.xml';
     var danmukuXml = null;
     return danmukuXml = $.ajax({
         url: danmukuAddress,
@@ -32,7 +34,6 @@ function getDanmukuXML(cid) {
  * @returns {Array} 弹幕数据， time: 整数发送时间， content: 弹幕内容
  */
 function parseDanmukuData(danmukuXml) {
-
     var danmukuData = [];
     $(danmukuXml).find('d').each(function () {
         var param = $(this).attr('p').split(',').map(function (str) {
