@@ -5,8 +5,10 @@
  * @returns {Object} 抽象出的播放器对象
  */
 function getBiliPlayer(success, fail) {
+    var player = null;
     var rawPlayer = null;
     var $rawIframe = null;
+    var videoLength = null;
 
     if (localStorage.defaulth5 === '1') {
         var gettingIframe = setInterval(function () {
@@ -20,17 +22,22 @@ function getBiliPlayer(success, fail) {
                 }
                 var gettingPlayer = setInterval(function () {
                     if (rawPlayer = $($rawIframe[0].contentDocument).find('video')[0]) {
-                        player = {
-                            seek: function (sec) {
-                                rawPlayer.currentTime = sec;
-                            },
-                            getPos: function () {
-                                return rawPlayer.currentTime;
+                        if (videoLength = rawPlayer.duration) {
+                            player = {
+                                videoLength: videoLength,
+                                seek: function (sec) {
+                                    rawPlayer.currentTime = sec;
+                                },
+                                getPos: function () {
+                                    return rawPlayer.currentTime;
+                                }
                             }
+                            clearInterval(gettingPlayer);
+                            gettingPlayer = null;
+                            success.call(this, player);
+                        } else {
+                            console.info('Duration not ready');
                         }
-                        clearInterval(gettingPlayer);
-                        gettingPlayer = null;
-                        success.call(this, player);
                     } else {
                         console.info('Player not ready');
                     }
@@ -51,7 +58,7 @@ function getBiliPlayer(success, fail) {
 function getAvObj() {
     return {
         avId: $.parseJSON($.ajax({
-            url: 'http:\/\/bangumi.bilibili.com/web_api/episode/' + window.location.href.match(/\d+/g)[1] + '.json',
+            url: '//bangumi.bilibili.com/web_api/episode/' + window.location.href.match(/\d+/g)[1] + '.json',
             async: false
         }).responseText).result.currentEpisode.avId,
         pageNum: '1'

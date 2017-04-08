@@ -55,14 +55,15 @@ function parseDanmukuData(danmukuXml) {
  * @param {Array} newDanmukuData （可选）弹幕数据，若此项为空，那么函数会从网络重新获得弹幕数据
  * @returns {Object} myChart 生成的eCharts 对象
  */
-function updateDanmukuData(myChart, newDanmukuData) {
+function updateDanmukuData(myChart, newDanmukuData, maxLength) {
+    console.log(maxLength);
     if (!newDanmukuData) {
         var avObj = getAvObj();
         var cid = getCid(avObj);
         var danmukuXml = getDanmukuXML(cid);
         newDanmukuData = parseDanmukuData(danmukuXml);
     }
-    var chartData = makeChartData(newDanmukuData);
+    var chartData = makeChartData(newDanmukuData, maxLength);
     refreshChartData(myChart, chartData, chartData.step);
     // var keyPoints = findKeyPoints(newDanmukuData, chartData.step, chartData.maxLength);
     return newDanmukuData;
@@ -76,14 +77,16 @@ function startChart() {
     myChart.danmuku = {};
     var danmukuData = null;
     getBiliPlayer(function (biliPlayerForControl) {
+        danmukuData = updateDanmukuData(myChart, null, biliPlayerForControl.videoLength);
         addPlayerHook(myChart, biliPlayerForControl);
     }, function () {
         tellUpdate($myChart);
     });
-    var danmukuData = updateDanmukuData(myChart, null);
+    // danmukuData = updateDanmukuData(myChart, null);
     addEventListener('hashchange', function () {
-        updateDanmukuData(myChart, null);
+        // updateDanmukuData(myChart, null);
         getBiliPlayer(function (biliPlayerForControl) {
+            updateDanmukuData(myChart, null, biliPlayerForControl.videoLength);
             addPlayerHook(myChart, biliPlayerForControl);
         }, function () {
             tellUpdate($myChart);

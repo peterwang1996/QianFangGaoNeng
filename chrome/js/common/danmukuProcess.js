@@ -32,14 +32,17 @@ function timeStrToNum(str) {
  * @param {Array} danmukuData 弹幕时间数据，每个元素是弹幕发送的时间
  * @returns 弹幕的具体数据
  */
-function makeChartData(danmukuData) {
+function makeChartData(danmukuData, maxLength) {
     var danmukuTime = danmukuData.map(function (n) {
         return n.time;
     })
     danmukuTime.sort(function (a, b) {
-        return b - a;
+        return a - b;
     });
-    var maxLength = danmukuTime[0];
+    for (var i = (danmukuTime.length - 1); danmukuTime[i] > maxLength; i--) {
+        danmukuTime.pop();
+    }
+    console.log(danmukuData);
     var avgRho = parseFloat((danmukuTime.length / maxLength).toFixed(2));
 
     var partDanmukuTime = [];
@@ -88,22 +91,13 @@ function refreshChartData(myChart, chartData, step) {
     chartOption.xAxis.data = chartData.partDanmukuTime;
     chartOption.series.data = chartData.partDanmukuRho;
     chartOption.series.markLine.data[0].yAxis = chartData.avgRho;
+    console.log(chartOption);
     myChart.setOption(chartOption);
     myChart.danmuku.step = step;
     addEventListener('resize', function() {
         myChart.resize();
     });
 }
-
-// function refreshChartData($myChart, danmukuData) {
-//     var myChart = echarts.init($myChart[0]);
-//     chartOption.xAxis.data = danmukuData.partDanmukuTime;
-//     chartOption.series.data = danmukuData.partDanmukuRho;
-//     chartOption.series.markLine.data[0].yAxis = danmukuData.avgRho;
-//     console.log(chartOption);
-//     myChart.setOption(chartOption);
-//     return myChart;
-// }
 
 function findKeyPoints(danmukuData, step, maxLength) {
     var keyPoints = [];

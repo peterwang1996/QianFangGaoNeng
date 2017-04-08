@@ -7,21 +7,27 @@
 function getBiliPlayer(success, fail) {
     var player = null;
     var rawPlayer = null;
+    var videoLength = null;
 
     if (localStorage.defaulth5 === '1') {
         var gettingPlayer = setInterval(function () {
             if (rawPlayer = $('.bilibili-player-video video')[0]) {
-                player = {
-                    seek: function (sec) {
-                        rawPlayer.currentTime = sec;
-                    },
-                    getPos: function () {
-                        return rawPlayer.currentTime;
+                if (videoLength = rawPlayer.duration) {
+                    player = {
+                        videoLength: videoLength,
+                        seek: function (sec) {
+                            rawPlayer.currentTime = sec;
+                        },
+                        getPos: function () {
+                            return rawPlayer.currentTime;
+                        }
                     }
+                    clearInterval(gettingPlayer);
+                    gettingPlayer = null;
+                    success.call(this, player);
+                } else {
+                    console.info('Duration not ready');
                 }
-                clearInterval(gettingPlayer);
-                gettingPlayer = null;
-                success.call(this, player);
             } else {
                 console.info('Player not ready');
             }
