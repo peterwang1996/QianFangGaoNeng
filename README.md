@@ -57,4 +57,6 @@ Copyright © 2016 ~ 2017, Peter Wang, All Rights Reserved
 
 **[V1.1 @ 2017-02-05]** 对 Bilibili 官方 HTML5 播放器的支持
 
-**[V1.1 @ 2017-02-07]** 对 Bilibili 番剧页面的支持，优化了性能，并除去了一些 Bug
+**[V1.2 @ 2017-02-07]** 对 Bilibili 番剧页面的支持，优化了性能，并除去了一些 Bug
+
+**[V1.3 @ 2017-04-08]** 对 Bilibili 的新接口做了适配，并优化了视频长度的获取策略
