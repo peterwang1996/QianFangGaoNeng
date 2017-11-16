@@ -29,7 +29,7 @@
             "*://www.bilibili.com/video/av*"
         ],
         "js": [
-            "./third-party/js/echarts..js",
+            "./third-party/js/echarts.common.min.js",
             "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/normal.js",
