@@ -7,9 +7,8 @@
     <link rel="stylesheet" href="./third-party/css/weui.min.css">
     <style>
         html {
-            width: 360px;
         }
-        
+
         h1 {
             text-align: center;
             font-size: 24px;
@@ -21,14 +20,18 @@
 
 <body>
     <h1>前方高能</h1>
-    <div class="weui_cells weui_cells_form">
-        <div class="weui_cell weui_cell_switch">
-            <div class="weui_cell_hd weui_cell_primary">显示图表（对新标签页有效）</div>
-            <div class="weui_cell_ft">
-                <input class="weui_switch" id="option-is-open" type="checkbox">
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell weui-cell_switch">
+            <div class="weui-cell_hd weui-cell_primary">显示图表（对新标签页有效）</div>
+            <div class="weui-cell__ft">
+                <label for="option-is-open" class="weui-switch-cp">
+                    <input id="option-is-open" class="weui-switch-cp__input" type="checkbox" checked="checked"/>
+                    <div class="weui-switch-cp__box"></div>
+
             </div>
         </div>
     </div>
+
     <script src="./js/popup/options.js"></script>
 </body>
 
