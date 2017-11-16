@@ -43,7 +43,7 @@
             "*://bangumi.bilibili.com/anime/*/play*"
         ],
         "js": [
-            "./third-party/js/echarts.custom.js",
+            "./third-party/js/echarts.common.min.js",
             "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/bangumi.js",
