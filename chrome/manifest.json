@@ -14,12 +14,13 @@
         ]
     },
     "permissions": [
-        "*://*.bilibili.com/*", 
+        "*://*.bilibili.com/*",
         "storage"
     ],
     "browser_action": {
         "default_title": "",
-        "default_popup": "popup.html"
+        "default_popup": "popup.html",
+        "default_icon": "img/icon128.png"
     },
 
     "content_scripts": [{
@@ -28,7 +29,7 @@
             "*://www.bilibili.com/video/av*"
         ],
         "js": [
-            "./third-party/js/echarts.custom.js",
+            "./third-party/js/echarts.common.min.js",
             "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/normal.js",
@@ -42,7 +43,7 @@
             "*://bangumi.bilibili.com/anime/*/play*"
         ],
         "js": [
-            "./third-party/js/echarts.custom.js",
+            "./third-party/js/echarts.common.min.js",
             "./third-party/js/jquery-3.1.1.min.js",
             "./js/bilibili/constVar.js",
             "./js/bilibili/bangumi.js",
