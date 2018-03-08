@@ -1,10 +1,14 @@
+前方高能 2.0 绝赞开发中！仓库暂未公开，[点击这里](https://www.peterwang1996.cn/chrome-extension-2-middle-report/)可以看到目前的开发报告
+
+------
+
 # 前方高能
 
 该插件已上架 Chrome Web Store ，[点击这里](https://chrome.google.com/webstore/detail/%E5%89%8D%E6%96%B9%E9%AB%98%E8%83%BD/aifplikdlpjakalndboebgcaichdeoeo?utm_source=chrome-ntp-icon)访问。
 
 ## 这是个什么玩意儿
 
-这是本 UP 主，哦不，本宝宝闲得蛋疼，写的一个黑科技小插件，用于 Chrome 浏览器（理论上 Webkit 内核的国产浏览器应该也可以用，但我还没测试过），作用就是在 Bilibili 的视频下面显示这么样一个图表：
+这是一个黑科技小插件，用于 Chrome 浏览器（理论上 Webkit 内核的国产浏览器应该也可以用，但我还没测试过），作用就是在 Bilibili 的视频下面显示这么样一个图表：
 
 ![1](https://cloud.githubusercontent.com/assets/12966803/17796539/c10b5362-65f3-11e6-8f76-2d819aa67ec1.png)
 
