@@ -1,4 +1,4 @@
-前方高能 2.0 绝赞开发中！仓库暂未公开，[点击这里](https://www.peterwang1996.cn/chrome-extension-2-middle-report/)可以看到目前的开发报告
+前方高能 2.0 绝赞开发中！仓库暂未公开，[点击这里](https://peterwang1996.cn/2018/03/01/5a9788ae5ff2ba0583d04cc1/)可以看到目前的开发报告
 
 ------
 
